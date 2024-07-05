@@ -10,6 +10,7 @@ third_base = []
 shortstop = []
 catcher = []
 designated_hitter = []
+pitcher = []
 
 
 def create_lineup(player_lst):
@@ -39,6 +40,8 @@ def sort_positionally(player_lst):
                 catcher.append(player)
             elif position == "DH":
                 designated_hitter.append(player)
+            elif position == "P":
+                pitcher.append(player)
 
     # print("Outfielders: ")
     # for player in outfield:

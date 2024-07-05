@@ -6,5 +6,5 @@ class Player:
         self.defensive_stats = defensive_stats
 
     def __str__(self):
-        return f"{self.name}: {self.positions}"
+        return f"{self.name}: {self.positions}, {self.offensive_stats}, {self.defensive_stats}"
 
