@@ -20,7 +20,7 @@ def create_lineup(player_lst):
     lineups = remove_invalid_lineups(lineups)
 
     print("# valid lineups: ", len(lineups))
-    return 0
+    return lineups
 
 
 def sort_positionally(player_lst):

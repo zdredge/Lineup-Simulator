@@ -1,5 +1,6 @@
 # This is a sample Python script.
 import CreateLineup
+import GameSim
 from Player import Player
 from readCSV import read_csv
 
@@ -7,13 +8,20 @@ from readCSV import read_csv
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
+def strip_tuple(lineup: tuple):
+    master_lineup = []
+    for i in range(7):
+        if i == 0:
+            for j in range(3):
+                master_lineup.append(lineup[i][j])
+        else:
+            master_lineup.append(lineup[i][0])
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+
+    return master_lineup
 
 
-# Press the green button in the gutter to run the script.
+
 if __name__ == '__main__':
     # offensive_stats = {
     #     "AVG": 350,
@@ -59,6 +67,13 @@ if __name__ == '__main__':
     # for player in players:
     #     print(player)
 
-    l1 = CreateLineup.create_lineup(list(players))
+    l1 = CreateLineup.create_lineup(list(players)) # in the form ((OF), (1B), (2B), (3B), (SS), (C), (DH))
+
+
+    lineup = strip_tuple(l1[i])
+    GameSim.run_sim(lineup)
+
+
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
