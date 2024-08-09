@@ -6,6 +6,13 @@ OUTS = 0
 HITTER = 0
 BASES = [0, 0, 0, 0]  # [FIRST, SECOND, THIRD, HOME]
 RUNS = 0
+SIM_RUN = 0
+
+RUNS_PER_GAME = []
+
+TOP_RUNS_PER_GAME_AVG = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+CURRENT_TOP_LINEUP = []
 
 
 def advance_runners(hit: int):
@@ -51,19 +58,19 @@ def advance_runners(hit: int):
         new_bases = [0, 0, 0, 0]
     BASES = new_bases
 
-    print("NEW BASES: ")
-    if BASES[0] == 1:
-        print("RUNNER ON FIRST")
-    if BASES[1] == 1:
-        print("RUNNER ON SECOND")
-    if BASES[2] == 1:
-        print("RUNNER ON THIRD")
+    # print("NEW BASES: ")
+    # if BASES[0] == 1:
+    #     print("RUNNER ON FIRST")
+    # if BASES[1] == 1:
+    #     print("RUNNER ON SECOND")
+    # if BASES[2] == 1:
+    #     print("RUNNER ON THIRD")
 
 
 
 
 def gets_hit(p: Player):
-    print(p.__str__())
+    # print(p.__str__())
     avg = p.offensive_stats.get('AVG')
     avg_as_int = int(avg.replace(".", ""))
     event = random.randint(0, 1000)
@@ -91,41 +98,83 @@ def is_extra_base_hit(p: Player):
     event = random.randint(0, 1000)
 
     if event <= single_cutoff:
-        print("single")
+        # print("single")
         return 1
     elif single_cutoff < event <= double_cutoff:
-        print("double")
+        # print("double")
         return 2
     elif double_cutoff < event <= triple_cutoff:
-        print("triple")
+        # print("triple")
         return 3
     else:
-        print("homerun")
+        # print("homerun")
         return 4
 
 
 def gets_on_base_conventional(p: Player):
-    return 0
+    # BB or HBP
+    avg = p.offensive_stats.get('AVG')
+    avg_as_int = int(avg.replace(".", ""))
+    probability_not_getting_hit = 1000 - avg_as_int
+
+    obp = p.offensive_stats.get('OBP')
+    obp_as_int = int(obp.replace(".", ""))
+
+
+    num_hits = int(p.offensive_stats.get('H'))
+    num_walks = int(p.offensive_stats.get('BB'))
+    num_hit_by_pitch = int(p.offensive_stats.get('HBP'))
+
+    probability_not_getting_hit_but_on_base = (((num_hits + num_walks + num_hit_by_pitch) - num_hits) / int(p.offensive_stats.get('PA'))) * 1000
+
+    probability = (probability_not_getting_hit_but_on_base * obp_as_int) / probability_not_getting_hit
+    event = random.randint(0, 1000)
+    if event < probability:
+        return 1
+    else:
+        return 0
+
 
 
 def gets_on_base_unconventional(p: Player):
+    # ROE or FC
     return 0
+
+def reset_sim():
+    global INNING, OUTS, HITTER, BASES, RUNS, TOP_RUNS_PER_GAME_AVG, RUNS_PER_GAME
+    INNING = 0
+    OUTS = 0
+    HITTER = 0
+    BASES = [0, 0, 0, 0]  # [FIRST, SECOND, THIRD, HOME]
+    RUNS = 0
+
+    # for i in range(len(TOP_RUNS_PER_GAME_AVG)):
+    #     print(TOP_RUNS_PER_GAME_AVG)
+
 
 
 def run_sim(lineup: list):
-    global INNING, OUTS, HITTER, RUNS, BASES
+    global INNING, OUTS, HITTER, RUNS, BASES, RUNS_PER_GAME, SIM_RUN, CURRENT_TOP_LINEUP, TOP_LINEUPS
+
+
     while INNING < 7:
         while OUTS < 3:
             if gets_hit(lineup[HITTER]) == 0:
                 if gets_on_base_conventional(lineup[HITTER]) == 0:
                     if gets_on_base_unconventional(lineup[HITTER]) == 0:
-                        print("out")
+                        # print("out")
                         OUTS += 1
                         HITTER += 1
                         if HITTER == 9:
                             HITTER = 0
+                    else:
+                        # print("On base, unconventional")
+                        advance_runners(1)
+                else:
+                    # print("On base, conventional")
+                    advance_runners(1)
             else:
-                print("hit")
+                # print("hit")
                 advance_runners(is_extra_base_hit(lineup[HITTER]));
                 HITTER += 1
                 if HITTER == 9:
@@ -134,5 +183,30 @@ def run_sim(lineup: list):
         INNING += 1
         BASES = [0, 0, 0, 0]
 
-    print("RUNS: ", RUNS)
+
+    RUNS_PER_GAME.append(RUNS)
+
+    if SIM_RUN == 9:
+        avg_runs = 0
+        for i in range(10):
+            avg_runs += RUNS_PER_GAME[i]
+        avg_runs = avg_runs / 10
+        RUNS_PER_GAME = []
+        for j in range(len(TOP_RUNS_PER_GAME_AVG)):
+            if avg_runs > TOP_RUNS_PER_GAME_AVG[j]:
+                TOP_RUNS_PER_GAME_AVG[j] = avg_runs
+                if j == 0:
+                    CURRENT_TOP_LINEUP = lineup
+                break
+        print("UPDATED TOP RUNS PER GAME: ", TOP_RUNS_PER_GAME_AVG)
+        print("TOP LINEUP: ")
+        for i in range(len(lineup)):
+            print(lineup[i])
+
+    SIM_RUN += 1
+    SIM_RUN = SIM_RUN % 10
+
+
+    reset_sim()
+
     return 0

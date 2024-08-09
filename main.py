@@ -49,7 +49,7 @@ if __name__ == '__main__':
     # players = list({deacon, pierce, brock, parker, kelstin, jason, ezra, tim, jayse, rohan, ryan, zammit, jackson})
 
     hard_coded_positions = [["OF", "DH"], ["OF", "DH"], ["OF", "DH"], ["P", "2B", "DH"], ["P", "1B", "DH"], ["P"], ["P"], ["P"],
-                            ["3B", "SS", "2B", "1B", "DH"], ["C", "DH"], ["3B", "1B", "C", "DH"], ["P"], ["OF", "P", "DH"], ["2B", "DH"], ["SS", "DH"],
+                            ["3B", "SS", "2B", "1B", "DH"], ["3B", "1B", "C", "DH"], ["P"], ["OF", "P", "DH"], ["2B", "DH"], ["SS", "DH"],
                             ["C", "DH"], ["1B", "DH"], ["OF", "DH"]]
 
     players = read_csv('16u 2024 Midwestern Ontario Bearcats Summer 2024 Stats (1).csv')
@@ -69,9 +69,12 @@ if __name__ == '__main__':
 
     l1 = CreateLineup.create_lineup(list(players)) # in the form ((OF), (1B), (2B), (3B), (SS), (C), (DH))
 
-
-    lineup = strip_tuple(l1[i])
-    GameSim.run_sim(lineup)
+    for i in range(len(l1)):
+        for j in range(10):
+            lineup = strip_tuple(l1[i])
+            GameSim.run_sim(lineup)
+    # lineup = strip_tuple(l1[i])
+    # GameSim.run_sim(lineup)
 
 
 
