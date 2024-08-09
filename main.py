@@ -1,6 +1,7 @@
 # This is a sample Python script.
 import CreateLineup
 import GameSim
+import SummaryStatistics
 from Player import Player
 from readCSV import read_csv
 
@@ -70,9 +71,19 @@ if __name__ == '__main__':
     l1 = CreateLineup.create_lineup(list(players)) # in the form ((OF), (1B), (2B), (3B), (SS), (C), (DH))
 
     for i in range(len(l1)):
-        for j in range(10):
+        for j in range(44):
             lineup = strip_tuple(l1[i])
-            GameSim.run_sim(lineup)
+            SummaryStatistics.update_current_run(GameSim.run_sim(lineup), lineup)
+        SummaryStatistics.update_rankings()
+
+    print("TOP LINEUP: ")
+
+    for i in range(9):
+        print("LINEUP #", i)
+        for j in range(9):
+
+            print(SummaryStatistics.TOP_LINEUPS[i][j].__str__())
+        print("RUNS SCORED: ", SummaryStatistics.TOP_RUNS_PER_GAME[i])
     # lineup = strip_tuple(l1[i])
     # GameSim.run_sim(lineup)
 

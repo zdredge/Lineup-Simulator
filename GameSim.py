@@ -6,14 +6,6 @@ OUTS = 0
 HITTER = 0
 BASES = [0, 0, 0, 0]  # [FIRST, SECOND, THIRD, HOME]
 RUNS = 0
-SIM_RUN = 0
-
-RUNS_PER_GAME = []
-
-TOP_RUNS_PER_GAME_AVG = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-CURRENT_TOP_LINEUP = []
-
 
 def advance_runners(hit: int):
     global BASES, RUNS
@@ -154,8 +146,9 @@ def reset_sim():
 
 
 def run_sim(lineup: list):
-    global INNING, OUTS, HITTER, RUNS, BASES, RUNS_PER_GAME, SIM_RUN, CURRENT_TOP_LINEUP, TOP_LINEUPS
+    global INNING, OUTS, HITTER, RUNS, BASES, RUNS_PER_GAME
 
+    reset_sim()
 
     while INNING < 7:
         while OUTS < 3:
@@ -184,29 +177,26 @@ def run_sim(lineup: list):
         BASES = [0, 0, 0, 0]
 
 
-    RUNS_PER_GAME.append(RUNS)
+    # RUNS_PER_GAME.append(RUNS)
+    #
+    # if SIM_RUN == 9:
+    #     avg_runs = 0
+    #     for i in range(10):
+    #         avg_runs += RUNS_PER_GAME[i]
+    #     avg_runs = avg_runs / 10
+    #     RUNS_PER_GAME = []
+    #     for j in range(len(TOP_RUNS_PER_GAME_AVG)):
+    #         if avg_runs > TOP_RUNS_PER_GAME_AVG[j]:
+    #             TOP_RUNS_PER_GAME_AVG[j] = avg_runs
+    #             if j == 0:
+    #                 CURRENT_TOP_LINEUP = lineup
+    #             break
+    #     print("UPDATED TOP RUNS PER GAME: ", TOP_RUNS_PER_GAME_AVG)
+    #     print("TOP LINEUP: ")
+    #     for i in range(len(lineup)):
+    #         print(lineup[i])
+    #
+    # SIM_RUN += 1
+    # SIM_RUN = SIM_RUN % 10
 
-    if SIM_RUN == 9:
-        avg_runs = 0
-        for i in range(10):
-            avg_runs += RUNS_PER_GAME[i]
-        avg_runs = avg_runs / 10
-        RUNS_PER_GAME = []
-        for j in range(len(TOP_RUNS_PER_GAME_AVG)):
-            if avg_runs > TOP_RUNS_PER_GAME_AVG[j]:
-                TOP_RUNS_PER_GAME_AVG[j] = avg_runs
-                if j == 0:
-                    CURRENT_TOP_LINEUP = lineup
-                break
-        print("UPDATED TOP RUNS PER GAME: ", TOP_RUNS_PER_GAME_AVG)
-        print("TOP LINEUP: ")
-        for i in range(len(lineup)):
-            print(lineup[i])
-
-    SIM_RUN += 1
-    SIM_RUN = SIM_RUN % 10
-
-
-    reset_sim()
-
-    return 0
+    return RUNS
