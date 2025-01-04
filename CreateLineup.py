@@ -9,6 +9,8 @@ second_base = []
 third_base = []
 shortstop = []
 catcher = []
+designated_hitter = []
+pitcher = []
 
 
 def create_lineup(player_lst):
@@ -18,7 +20,7 @@ def create_lineup(player_lst):
     lineups = remove_invalid_lineups(lineups)
 
     print("# valid lineups: ", len(lineups))
-    return 0
+    return lineups
 
 
 def sort_positionally(player_lst):
@@ -36,6 +38,10 @@ def sort_positionally(player_lst):
                 shortstop.append(player)
             elif position == "C":
                 catcher.append(player)
+            elif position == "DH":
+                designated_hitter.append(player)
+            elif position == "P":
+                pitcher.append(player)
 
     # print("Outfielders: ")
     # for player in outfield:
@@ -81,6 +87,8 @@ def generate_subsets():
     # choose C
     player_pool.append(subsets_of_size(catcher, 1))
 
+    player_pool.append(subsets_of_size(designated_hitter, 1))
+
     return player_pool
 
 
@@ -93,7 +101,7 @@ def subsets_of_size(given_set, subset_size):
 
 def cartesian_product(position_subsets):
     lineups = list(itertools.product(position_subsets[0], position_subsets[1], position_subsets[2], position_subsets[3],
-                                     position_subsets[4], position_subsets[5]))
+                                     position_subsets[4], position_subsets[5], position_subsets[6]))
     return lineups
 
 
